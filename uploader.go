@@ -11,7 +11,7 @@ func upload(w http.ResponseWriter, r *http.Request) {
 		_, header, _ := r.FormFile("file")
 		file, _ := header.Open()
 		path := fmt.Sprintf("%s", header.Filename)
-		fmt.Sprintf("upload: %s\n", path)
+		fmt.Printf("received: %s\n", header.Filename)
 		buf, _ := ioutil.ReadAll(file)
 		ioutil.WriteFile(path, buf, 0644)
 		http.Redirect(w, r, "/"+path, 301)
