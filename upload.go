@@ -10,7 +10,8 @@ func upload(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		_, header, _ := r.FormFile("file")
 		file, _ := header.Open()
-		path := fmt.Sprintf("files/%s", header.Filename)
+		path := fmt.Sprintf("%s", header.Filename)
+		fmt.Sprintf("upload: %s\n", path)
 		buf, _ := ioutil.ReadAll(file)
 		ioutil.WriteFile(path, buf, 0644)
 		http.Redirect(w, r, "/"+path, 301)
@@ -21,12 +22,13 @@ func upload(w http.ResponseWriter, r *http.Request) {
 func index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, `<html>
     <head>
-        <title> Dank Upload Page</title>
+        <meta charset="utf-8"></meta>
+        <title>Uploader</title>
     </head>
     <body>
         <form action="/upload" method="post" enctype="multipart/form-data">
             <input type="file" id="file" name="file">
-            <input type="submit" name="submit" value="submit">
+            <input type="submit" name="submit" value="upload">
         </form>
     </body>
 </html>`)
@@ -36,5 +38,6 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/upload", upload)
 	http.Handle("/files/", staticServer)
-	panic(http.ListenAndServe(":8080", nil))
+	fmt.Printf("Listen port :5000\n")
+	panic(http.ListenAndServe(":5000", nil))
 }
